@@ -21,7 +21,7 @@ void	destroy_maze(void)
 		}
 		if (maze->win)
 			mlx_destroy_window(maze->mlx, maze->win);
-		// mlx_destroy_display(maze->mlx);
+		mlx_destroy_display(maze->mlx);
 		free(maze->mlx);
 	}
 }
