@@ -57,35 +57,17 @@ void move_right(t_maze *m, t_player *p)
         p->pos.y = next_y;
 }
 
-void rotate_left(t_player *p)
+void rotate(t_player *p, double angle)
 {
     double old_dir_x = p->dir.x;
-    double angle = ROT_SPEED;
+    double old_plane_x = p->plane.x;
 
     p->dir.x = p->dir.x * cos(angle) - p->dir.y * sin(angle);
     p->dir.y = old_dir_x * sin(angle) + p->dir.y * cos(angle);
 
-    double old_plane_x = p->plane.x;
-
     p->plane.x = p->plane.x * cos(angle) - p->plane.y * sin(angle);
     p->plane.y = old_plane_x * sin(angle) + p->plane.y * cos(angle);
 }
-
-
-void rotate_right(t_player *p)
-{
-    double old_dir_x = p->dir.x;
-    double angle = -ROT_SPEED;
-
-    p->dir.x = p->dir.x * cos(angle) - p->dir.y * sin(angle);
-    p->dir.y = old_dir_x * sin(angle) + p->dir.y * cos(angle);
-
-    double old_plane_x = p->plane.x;
-
-    p->plane.x = p->plane.x * cos(angle) - p->plane.y * sin(angle);
-    p->plane.y = old_plane_x * sin(angle) + p->plane.y * cos(angle);
-}
-
 
 int key_handler(int key, t_maze *maze)
 {
@@ -102,10 +84,10 @@ int key_handler(int key, t_maze *maze)
         move_left(maze, player);
     else if (key == KEY_D)
         move_right(maze, player);
-    else if (key == KEY_LEFT)
-        rotate_left(player);
     else if (key == KEY_RIGHT)
-        rotate_right(player);
+        rotate(player, ROT_SPEED);
+    else if (key == KEY_LEFT)
+        rotate(player, -ROT_SPEED);
     return (0);
 }
 
