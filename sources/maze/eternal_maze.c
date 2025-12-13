@@ -8,7 +8,7 @@ int eternal_maze()
 
     mlx_loop_hook(maze->mlx, render_all, maze);
 
-    mlx_hook(maze->win, 2, 0, key_handler, maze);
+    mlx_hook(maze->win, 2, 1, key_handler, maze);
     mlx_hook(maze->win, 17, 0, close_window, NULL);
 
     mlx_loop(maze->mlx);

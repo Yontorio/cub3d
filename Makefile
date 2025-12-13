@@ -4,10 +4,10 @@ CC          = cc
 CFLAGS      = #-Wall -Wextra -Werror -g
 
 MLX_DIR     = minilibx_opengl
-MLX_FLAGS   = -framework OpenGL -framework AppKit
+MLX_FLAGS   = -L/usr/include/minilibx-linux -lmlx -lXext -lX11 -lm
 MLX         = $(MLX_DIR)/libmlx.a
 
-INCLUDES    = -I includes -I $(MLX_DIR)
+INCLUDES    = -I includes
 
 OBJ_DIR     = objects
 
@@ -111,7 +111,7 @@ $(OBJ_DIR):
 
 $(NAME): $(OBJS) 
 	# @$(MAKE) -C $(MLX_DIR)
-	$(CC) $(CFLAGS) $(OBJS) $(MLX) $(MLX_FLAGS) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS)  $(MLX_FLAGS) -o $(NAME)
 
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
