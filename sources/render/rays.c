@@ -135,7 +135,7 @@ void	draw_textured_line(t_maze *m, int x, t_line *line, t_tex_info *tex)
 	}
 }
 
-void	render_maze(t_maze *m)
+void	raycasting(t_maze *m)
 {
 	int		x;
 	t_vec	ray;

@@ -20,8 +20,8 @@
 # define KEY_S     1
 # define KEY_A     0
 # define KEY_D     2
-# define KEY_LEFT  124
-# define KEY_RIGHT 123
+# define KEY_LEFT  123
+# define KEY_RIGHT 124
 
 typedef struct s_keys
 {
@@ -153,17 +153,16 @@ int     eternal_maze(void);
 bool    maze_setup(void);
 bool    error_exit(char *error_msg);
 t_maze **maze_struct(void);
-int render_all(t_maze *maze);
+int render_frame(t_maze *maze);
 void draw_minimap(t_maze *maze);
-void render_maze(t_maze *m);
+void raycasting(t_maze *m);
 void put_pixel(t_img *img, int x, int y, int color);
 
 void load_textures(t_maze *m);
 
-int update_player(t_maze *maze);
+int render_maze(t_maze *maze);
 int key_press(int key, t_maze *maze);
 int key_release(int key, t_maze *maze);
-int     key_handler(int key, t_maze *maze);
 int     close_window(void);
 
 // void    render_background(t_maze *maze, int color);

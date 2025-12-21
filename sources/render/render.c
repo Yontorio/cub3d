@@ -20,13 +20,13 @@ void draw_floor_ceiling(t_maze *m)
     }
 }
 
-int render_all(t_maze *maze)
+int render_frame(t_maze *maze)
 {
     // render_background(maze, 0x202020);
 
     draw_floor_ceiling(maze);
 
-    render_maze(maze);
+    raycasting(maze);
 
     draw_minimap(maze);
 
