@@ -20,17 +20,17 @@ void draw_floor_ceiling(t_maze *m)
     }
 }
 
-int render_all(t_maze *maze)
+int render_frame(t_maze *maze)
 {
     // render_background(maze, 0x202020);
 
     draw_floor_ceiling(maze);
 
-    render_maze(maze);
+    raycasting(maze);
 
     draw_minimap(maze);
 
     mlx_put_image_to_window(maze->mlx, maze->win, maze->img.img, 0, 0);
-    // mlx_destroy_image(maze->mlx, maze->img.img);
+    // mlx_destroy_image(maze->mlx, maze->img.img); // where should this be?
     return (0);
 }

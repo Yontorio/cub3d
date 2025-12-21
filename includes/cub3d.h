@@ -13,8 +13,8 @@
 
 # define INITIAL_CAPACITY 64
 
-# define MOVE_SPEED 0.15
-# define ROT_SPEED  0.06
+# define MOVE_SPEED 0.08
+# define ROT_SPEED  0.04
 
 # define KEY_ESC   65307
 # define KEY_W     119
@@ -24,6 +24,16 @@
 # define KEY_LEFT  65361
 # define KEY_RIGHT 65363
 
+
+typedef struct s_keys
+{
+    int w;
+    int a;
+    int s;
+    int d;
+    int left;
+    int right;
+} t_keys;
 
 typedef struct s_dda
 {
@@ -126,6 +136,8 @@ typedef struct s_maze
     t_map       map;
 
     t_img       tex[4];
+
+    t_keys      keys;
 }   t_maze;
 
 
@@ -142,16 +154,17 @@ int     eternal_maze(void);
 bool    maze_setup(void);
 bool    error_exit(char *error_msg);
 t_maze **maze_struct(void);
-int render_all(t_maze *maze);
+int render_frame(t_maze *maze);
 void draw_minimap(t_maze *maze);
-void render_maze(t_maze *m);
+void raycasting(t_maze *m);
 void put_pixel(t_img *img, int x, int y, int color);
 
 void load_textures(t_maze *m);
 
-
-int     key_handler(int key, t_maze *maze);
-int     close_window(void);
+int render_maze(t_maze *maze);
+int key_press(int key, t_maze *maze);
+int key_release(int key, t_maze *maze);
+int close_window(void);
 
 // void    render_background(t_maze *maze, int color);
 

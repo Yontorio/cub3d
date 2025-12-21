@@ -69,25 +69,59 @@ void rotate(t_player *p, double angle)
     p->plane.y = old_plane_x * sin(angle) + p->plane.y * cos(angle);
 }
 
-int key_handler(int key, t_maze *maze)
+int key_press(int key, t_maze *maze)
 {
-    t_player *player;
-
-    player = &maze->map.player;
     if (key == KEY_ESC)
         close_window();
     else if (key == KEY_W)
-        move_forward(maze, player);
+        maze->keys.w = 1;
     else if (key == KEY_S)
-        move_backward(maze, player);
+        maze->keys.s = 1;
     else if (key == KEY_A)
-        move_left(maze, player);
+        maze->keys.a = 1;
     else if (key == KEY_D)
-        move_right(maze, player);
-    else if (key == KEY_RIGHT)
-        rotate(player, ROT_SPEED);
+        maze->keys.d = 1;
     else if (key == KEY_LEFT)
-        rotate(player, -ROT_SPEED);
+        maze->keys.left = 1;
+    else if (key == KEY_RIGHT)
+        maze->keys.right = 1;
+    return (0);
+}
+
+int key_release(int key, t_maze *maze)
+{
+    if (key == KEY_W)
+        maze->keys.w = 0;
+    else if (key == KEY_S)
+        maze->keys.s = 0;
+    else if (key == KEY_A)
+        maze->keys.a = 0;
+    else if (key == KEY_D)
+        maze->keys.d = 0;
+    else if (key == KEY_LEFT)
+        maze->keys.left = 0;
+    else if (key == KEY_RIGHT)
+        maze->keys.right = 0;
+    return (0);
+}
+
+int render_maze(t_maze *maze)
+{
+    t_player *p = &maze->map.player;
+
+    if (maze->keys.w)
+        move_forward(maze, p);
+    if (maze->keys.s)
+        move_backward(maze, p);
+    if (maze->keys.a)
+        move_left(maze, p);
+    if (maze->keys.d)
+        move_right(maze, p);
+    if (maze->keys.right)
+        rotate(p, ROT_SPEED);
+    if (maze->keys.left)
+        rotate(p, -ROT_SPEED);
+    render_frame(maze);
     return (0);
 }
 

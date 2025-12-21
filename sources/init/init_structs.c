@@ -1,15 +1,5 @@
 #include "cub3d.h"
 
-static void init_player(t_player *player)
-{
-    player->pos.x = 0;
-    player->pos.y = 0;
-    player->dir.x = 0;
-    player->dir.y = 0;
-    player->plane.x = 0;
-    player->plane.y = 0;
-}
-
 void init_env(t_env *env)
 {
     env->no = NULL;
@@ -38,5 +28,5 @@ void init_map(t_map *map)
     map->grid = NULL;
     map->width = 0;
     map->height = 0;
-    init_player(&map->player);
+    ft_memset(&map->player, 0, sizeof(t_player));
 }
