@@ -29,12 +29,12 @@ int is_map_line(char *line)
     return (line[i] == '1' || line[i] == '0');
 }
 
+
 // void normalize_map(t_map *map)
 // {
-//     int max = get_max_width(map->grid);
+//     int max = map->width;
 //     int i;
 
-//     map->width = max;
 //     for (i = 0; map->grid[i]; i++)
 //     {
 //         int len = ft_strlen(map->grid[i]);
@@ -67,8 +67,9 @@ void extract_map(char **lines)
     grid[map_lines] = NULL;
     map->grid = grid;
     map->height = map_lines;
+    map->width = get_max_width(map->grid); // if no minimap rm it
 	parse_player(map);
-    // normalize_map(map); // is it necess
+    // normalize_map(map); // is it necess?
     check_map_chars(map);
     check_map_closed(map);
 }
