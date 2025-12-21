@@ -40,7 +40,7 @@ char	**duplicate_map(t_map *map)
 void flood_fill(char **map, int y, int x)
 {
     if (y < 0 || x < 0 || !map[y] || !map[y][x] || map[y][x] == ' ')
-        error_exit("Map is not closed");
+        error_exit("Map is not fully surrounded by walls");
     if (map[y][x] == '1')
         return;
     map[y][x] = '1';
@@ -49,24 +49,25 @@ void flood_fill(char **map, int y, int x)
     flood_fill(map, y, x + 1);
     flood_fill(map, y, x - 1);
 }
-// void flood_fill(char **map, int y, int x)
-// {
-//     if (y < 0 || x < 0 || !map[y] || !map[y][x])
-//         error_exit("Map is not closed");
 
-//     if (map[y][x] == '1' || map[y][x] == 'X')
-//         return;
+void check_flood_result(char **copy)
+{
+    int y;
+    int x;
 
-//     if (map[y][x] == ' ')
-//         error_exit("Map is not closed");
-
-//     map[y][x] = 'X';
-
-//     flood_fill(map, y + 1, x);
-//     flood_fill(map, y - 1, x);
-//     flood_fill(map, y, x + 1);
-//     flood_fill(map, y, x - 1);
-// }
+    y = 0;
+    while (copy[y])
+    {
+        x = 0;
+        while (copy[y][x])
+        {
+            if (copy[y][x] != '1' && copy[y][x] != ' ')
+                flood_fill(copy, y, x);
+            x++;
+        }
+        y++;
+    }
+}
 
 void check_map_closed(t_map *map)
 {
@@ -76,5 +77,6 @@ void check_map_closed(t_map *map)
     copy = duplicate_map(map);
     set_current_section(REMAINS);
     flood_fill(copy, map->player.pos.y, map->player.pos.x);
+    check_flood_result(copy);
 	destroy_section(TEMPORARY);
 }
