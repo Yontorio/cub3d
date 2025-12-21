@@ -29,28 +29,27 @@ int is_map_line(char *line)
     return (line[i] == '1' || line[i] == '0');
 }
 
-void normalize_map(t_map *map)
-{
-    int max = get_max_width(map->grid);
-    int i;
+// void normalize_map(t_map *map)
+// {
+//     int max = map->width;
+//     int i;
 
-    map->width = max;
-    for (i = 0; map->grid[i]; i++)
-    {
-        int len = ft_strlen(map->grid[i]);
+//     for (i = 0; map->grid[i]; i++)
+//     {
+//         int len = ft_strlen(map->grid[i]);
 
-        if (len < max)
-        {
-            char *new_line = ft_realloc(map->grid[i], len + 1, max + 1);
+//         if (len < max)
+//         {
+//             char *new_line = ft_realloc(map->grid[i], len + 1, max + 1);
 
-            ft_memset(new_line + len, ' ', max - len);
+//             ft_memset(new_line + len, ' ', max - len);
 
-            new_line[max] = '\0';
+//             new_line[max] = '\0';
 
-            map->grid[i] = new_line;
-        }
-    }
-}
+//             map->grid[i] = new_line;
+//         }
+//     }
+// }
 
 void extract_map(char **lines)
 {
@@ -67,6 +66,7 @@ void extract_map(char **lines)
     grid[map_lines] = NULL;
     map->grid = grid;
     map->height = map_lines;
+    map->width = get_max_width(map->grid);
 	parse_player(map);
     // normalize_map(map); // is it necess?
     check_map_chars(map);
