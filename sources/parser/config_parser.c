@@ -56,8 +56,6 @@ static void process_lines(char **lines)
         error_exit("Missing or invalid line in .cub file");
 }
 
-
-
 bool config_parser(int ac, char **av)
 {
     char	**lines;

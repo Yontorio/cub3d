@@ -24,10 +24,6 @@
 # include <stddef.h>
 # include <unistd.h>
 # include <stdbool.h>
-# include <sys/stat.h>
-# include <sys/wait.h>
-# include <sys/types.h>
-# include <readline/history.h>
-# include <readline/readline.h>
+
 
 #endif
