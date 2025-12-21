@@ -1,47 +1,5 @@
 #include "cub3d.h"
 
-// static void process_lines(char **lines)
-// {
-//     t_maze *maze = *maze_struct();
-//     int textures = 0;
-//     int colors = 0;
-//     int map = 0;
-//     char *line;
-//     int i = -1;
-
-//     while (lines[++i])
-//     {
-//         line = lines[i];
-//         if (!line || line[0] == '\0')
-//             continue;
-//         if (!ft_strncmp(line, "NO", 2) ||
-//             !ft_strncmp(line, "SO", 2) ||
-//             !ft_strncmp(line, "WE", 2) ||
-//             !ft_strncmp(line, "EA", 2))
-//         {
-//             parse_texture_line(&maze->env, line);
-//             textures++;
-//             continue;
-//         }
-//         if (line[0] == 'F' || line[0] == 'C')
-//         {
-//             parse_color_line(&maze->env, line);
-//             colors++;
-//             continue;
-//         }
-//         if (is_map_line(line))
-//         {
-//             extract_map(&maze->map, &lines[i]);
-//             map++;
-//             break;
-//         }
-//         error_exit("Invalid line in .cub file"); // is a space in empty line a problem?
-//     }
-//     if (!(textures == 4 && colors == 2 && map == 1)) // is it necessery? maybe textures & colors should
-//         error_exit("Invalid line in .cub file"); // overide it only check if the minimal is there!?
-// }
-
-
 static bool	is_texture_line(char *line)
 {
 	if (!ft_strncmp(line, "NO ", 3) ||
@@ -94,8 +52,8 @@ static void process_lines(char **lines)
 		if (cnt.map == 1)
 			break ;
     }
-    if (!(cnt.textures == 4 && cnt.colors == 2 && cnt.map == 1)) // is it necessery? maybe textures & colors should
-        error_exit("Missing or invalid line in .cub file"); // overide it only check if the minimal is there!?
+    if (!(cnt.textures == 4 && cnt.colors == 2 && cnt.map == 1))
+        error_exit("Missing or invalid line in .cub file");
 }
 
 
@@ -109,7 +67,7 @@ bool config_parser(int ac, char **av)
         return (false);
     set_current_section(TEMPORARY);
     file = read_file(av[1]);
-    lines = ft_split(file, "\n");
+    lines = split_lines(file);
     set_current_section(REMAINS);
     process_lines(lines);
     return (true);

@@ -68,7 +68,7 @@ void extract_map(char **lines)
     map->grid = grid;
     map->height = map_lines;
 	parse_player(map);
-    normalize_map(map); // is it necess
+    // normalize_map(map); // is it necess?
     check_map_chars(map);
     check_map_closed(map);
 }

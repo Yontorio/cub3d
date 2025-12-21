@@ -35,7 +35,7 @@ void parse_color_line(char *line)
         error_exit("Invalid color line");
 
     rgb = ft_split(parts[1], ",");
-    if (!rgb || !rgb[0] || !rgb[1] || !rgb[2])
+    if (!rgb || !rgb[0] || !rgb[1] || !rgb[2] || count_char(parts[1], ',') != 2)
         error_exit("Invalid RGB format");
 
     r = ft_atoi(rgb[0]);
