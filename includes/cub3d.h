@@ -12,8 +12,8 @@
 
 # define INITIAL_CAPACITY 64
 
-# define MOVE_SPEED 0.2
-# define ROT_SPEED 0.1
+# define MOVE_SPEED 0.08
+# define ROT_SPEED  0.04
 
 # define KEY_ESC   53
 # define KEY_W     13
@@ -22,6 +22,16 @@
 # define KEY_D     2
 # define KEY_LEFT  124
 # define KEY_RIGHT 123
+
+typedef struct s_keys
+{
+    int w;
+    int a;
+    int s;
+    int d;
+    int left;
+    int right;
+} t_keys;
 
 
 typedef struct s_dda
@@ -125,6 +135,8 @@ typedef struct s_maze
     t_map       map;
 
     t_img       tex[4];
+
+    t_keys      keys;
 }   t_maze;
 
 
@@ -148,7 +160,9 @@ void put_pixel(t_img *img, int x, int y, int color);
 
 void load_textures(t_maze *m);
 
-
+int update_player(t_maze *maze);
+int key_press(int key, t_maze *maze);
+int key_release(int key, t_maze *maze);
 int     key_handler(int key, t_maze *maze);
 int     close_window(void);
 

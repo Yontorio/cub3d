@@ -13,5 +13,6 @@ bool init_maze(t_maze **pointer)
     init_img(&maze->img);
     init_env(&maze->env);
     init_map(&maze->map);
+    ft_memset(&maze->keys, 0, sizeof(t_keys));
     return (true);
 }

@@ -109,6 +109,65 @@ int key_handler(int key, t_maze *maze)
     return (0);
 }
 
+int key_press(int key, t_maze *maze)
+{
+    if (key == KEY_ESC)
+        close_window();
+    else if (key == KEY_W)
+        maze->keys.w = 1;
+    else if (key == KEY_S)
+        maze->keys.s = 1;
+    else if (key == KEY_A)
+        maze->keys.a = 1;
+    else if (key == KEY_D)
+        maze->keys.d = 1;
+    else if (key == KEY_LEFT)
+        maze->keys.left = 1;
+    else if (key == KEY_RIGHT)
+        maze->keys.right = 1;
+    return (0);
+}
+
+int update_player(t_maze *maze)
+{
+    t_player *p = &maze->map.player;
+
+    if (maze->keys.w)
+        move_forward(maze, p);
+    if (maze->keys.s)
+        move_backward(maze, p);
+    if (maze->keys.a)
+        move_left(maze, p);
+    if (maze->keys.d)
+        move_right(maze, p);
+    if (maze->keys.left)
+        rotate_left(p);
+    if (maze->keys.right)
+        rotate_right(p);
+    render_all(maze);
+    return (0);
+}
+
+
+
+int key_release(int key, t_maze *maze)
+{
+    if (key == KEY_W)
+        maze->keys.w = 0;
+    else if (key == KEY_S)
+        maze->keys.s = 0;
+    else if (key == KEY_A)
+        maze->keys.a = 0;
+    else if (key == KEY_D)
+        maze->keys.d = 0;
+    else if (key == KEY_LEFT)
+        maze->keys.left = 0;
+    else if (key == KEY_RIGHT)
+        maze->keys.right = 0;
+    return (0);
+}
+
+
 int close_window(void)
 {
     destroy_maze();
