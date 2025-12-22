@@ -1,13 +1,13 @@
 NO textures/wall.xpm
 SO textures/wall.xpm
-WE textures/wall.xpm
+WE textures/2.xpm
 
 
 
 
 
-EA textures/wall.xpm
 F 220,100,0
+EA textures/2.xpm
 C 225,30,0
         1111111111111111111111111
         1000000000110000000000001

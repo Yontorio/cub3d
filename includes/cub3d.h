@@ -37,13 +37,14 @@ typedef struct s_mm
 	int	radius;
 }	t_mm;
 
-#define MM_RADIUS       75
-#define MM_TILE         8
-#define MM_PADDING      15
+#define MM_RADIUS       90
+#define MM_TILE         9
+#define MM_PADDING      18
 #define FOV_ANGLE       0.66 // use it in initing too
 #define MM_BR_THICk     4
 #define MM_BR_COLOR     0x63120D
 #define MM_BG_COLOR     0x111111
+#define MM_TEXT_COLOR   0xFFFFFF
 
 #define MM_PLAYER_RADIUS 4
 #define MM_PLAYER_COLOR  0xAD0900
