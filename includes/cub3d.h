@@ -46,6 +46,7 @@ typedef struct s_mm
 #define MM_BR_THICk     4
 #define MM_BR_COLOR     0x63120D
 #define MM_BG_COLOR     0x111111
+#define MM_TEXT_COLOR   0xFFFFFF
 
 #define MM_PLAYER_RADIUS 4
 #define MM_PLAYER_COLOR  0xAD0900
