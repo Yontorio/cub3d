@@ -24,21 +24,21 @@ void	draw_minimap_compass(t_maze *m)
 {
 	mlx_string_put(m->mlx, m->win,
 		MM_PADDING + MM_RADIUS - 4,
-		MM_PADDING + 2,
+		MM_PADDING + 6,
 		MM_TEXT_COLOR,
 		"N");
 	mlx_string_put(m->mlx, m->win,
 		MM_PADDING + MM_RADIUS - 3,
-		MM_PADDING + 6 + MM_RADIUS * 2,
+		MM_PADDING + 2 + MM_RADIUS * 2,
 		MM_TEXT_COLOR,
 		"S");
 	mlx_string_put(m->mlx, m->win,
-		MM_PADDING - 4,
+		MM_PADDING - 2,
 		MM_PADDING + MM_RADIUS + 2,
 		MM_TEXT_COLOR,
 		"W");
 	mlx_string_put(m->mlx, m->win,
-		MM_PADDING - 2 + MM_RADIUS * 2,
+		MM_PADDING - 4 + MM_RADIUS * 2,
 		MM_PADDING + MM_RADIUS + 3,
 		MM_TEXT_COLOR,
 		"E");
@@ -58,6 +58,6 @@ int render_frame(t_maze *maze)
 
     draw_minimap_compass(maze);
     
-    // mlx_destroy_image(maze->mlx, maze->img.img); // where should this be?
+    // mlx_destroy_image(maze->mlx, maze->img.img); // where to call
     return (0);
 }

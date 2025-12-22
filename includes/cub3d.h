@@ -50,6 +50,7 @@ typedef struct s_mm
 
 #define MM_PLAYER_RADIUS 4
 #define MM_PLAYER_COLOR  0xAD0900
+#define MOUSE_SENSOR     0.004
 
 
 typedef struct s_keys
@@ -157,6 +158,8 @@ typedef struct s_maze
     int         win_w;
     int         win_h;
 
+    int         mouse_x;
+
     t_img       img;
 
     t_env       env;
@@ -192,6 +195,7 @@ int render_maze(t_maze *maze);
 int key_press(int key, t_maze *maze);
 int key_release(int key, t_maze *maze);
 int close_window(void);
+int mouse_rotate(int x, int y, t_maze *maze);
 
 // void    render_background(t_maze *maze, int color);
 

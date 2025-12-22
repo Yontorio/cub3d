@@ -125,6 +125,16 @@ int render_maze(t_maze *maze)
     return (0);
 }
 
+int mouse_rotate(int x, int y, t_maze *maze)
+{
+    int dx;
+
+    dx = x - maze->mouse_x;
+    maze->mouse_x = x;
+    rotate(&maze->map.player, dx * MOUSE_SENSOR);
+    return (0);
+}
+
 int close_window(void)
 {
     destroy_maze();
