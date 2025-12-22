@@ -28,7 +28,7 @@ int render_frame(t_maze *maze)
 
     raycasting(maze);
 
-    draw_minimap(maze);
+    render_minimap(maze);
 
     mlx_put_image_to_window(maze->mlx, maze->win, maze->img.img, 0, 0);
     // mlx_destroy_image(maze->mlx, maze->img.img); // where to call
