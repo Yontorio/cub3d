@@ -10,25 +10,71 @@ void put_pixel(t_img *img, int x, int y, int color)
     char *px = img->addr + (y * img->line_len + x * (img->bpp / 8));
     *(unsigned int *)px = color;
 }
+static int inside_circle(int cx, int cy, int x, int y, int r)
+{
+    int dx = x - cx;
+    int dy = y - cy;
+    return (dx * dx + dy * dy <= r * r);
+}
+void draw_square_clipped(
+    t_img *img,
+    int sx,
+    int sy,
+    int size,
+    int color,
+    int cx,
+    int cy,
+    int radius)
+{
+    int x;
+    int y;
 
-// void render_background(t_maze *maze, int color)
-// {
-//     int y = 0;
-//     int x;
-//     int pixel;
+    y = 0;
+    while (y < size)
+    {
+        x = 0;
+        while (x < size)
+        {
+            if (inside_circle(cx, cy, sx + x, sy + y, radius))
+                put_pixel(img, sx + x, sy + y, color);
+            x++;
+        }
+        y++;
+    }
+}
 
-//     while (y < maze->win_h)
-//     {
-//         x = 0;
-//         while (x < maze->win_w)
-//         {
-//             pixel = y * maze->img.line_len + x * (maze->img.bpp / 8);
-//             *(unsigned int *)(maze->img.addr + pixel) = color;
-//             x++;
-//         }
-//         y++;
-//     }
-// }
+void draw_player_dir(t_img *img, int x, int y, t_player *p)
+{
+    int i = 0;
+
+    while (i < 12)
+    {
+        put_pixel(img,
+            x + p->dir.x * i,
+            y + p->dir.y * i,
+            0xFF0000);
+        i++;
+    }
+}
+
+void draw_circle(t_img *img, int cx, int cy, int r, int color)
+{
+    int x;
+    int y;
+
+    y = -r;
+    while (y <= r)
+    {
+        x = -r;
+        while (x <= r)
+        {
+            if (x * x + y * y <= r * r)
+                put_pixel(img, cx + x, cy + y, color);
+            x++;
+        }
+        y++;
+    }
+}
 
 
 void draw_square(t_img *img, int sx, int sy, int size, int color)
@@ -47,99 +93,131 @@ void draw_square(t_img *img, int sx, int sy, int size, int color)
         y++;
     }
 }
-
-
-void draw_minimap(t_maze *maze)
+static void rotate(double *x, double *y, double angle)
 {
-    int t = 8;
-    int y = 0;
+    double old_x = *x;
+    *x = old_x * cos(angle) - *y * sin(angle);
+    *y = old_x * sin(angle) + *y * cos(angle);
+}
+
+void draw_circle_border(
+    t_img *img,
+    int cx,
+    int cy,
+    int radius,
+    int border_color
+)
+{
+    int y;
     int x;
 
-    while (y < maze->map.height)
+    for (y = -radius; y <= radius; y++)
+    {
+        for (x = -radius; x <= radius; x++)
+        {
+            int dist_sq = x * x + y * y;
+            int r_sq = radius * radius;
+            int inner_sq = (radius - MM_BORDER_THICKNESS)
+                            * (radius - MM_BORDER_THICKNESS);
+
+            // outside circle → ignore
+            if (dist_sq > r_sq)
+                continue;
+
+            // border
+            if (dist_sq >= inner_sq)
+            {
+                put_pixel(img, cx + x, cy + y, border_color);
+            }
+            // background
+            else
+            {
+                put_pixel(img, cx + x, cy + y, MM_BG_COLOR);
+            }
+        }
+    }
+}
+
+void draw_fov(t_maze *m, int cx, int cy)
+{
+    t_player *p = &m->map.player;
+
+    double lx = p->dir.x;
+    double ly = p->dir.y;
+    double rx = p->dir.x;
+    double ry = p->dir.y;
+
+    rotate(&lx, &ly,  FOV_ANGLE / 2);
+    rotate(&rx, &ry, -FOV_ANGLE / 2);
+
+    int i = 0;
+    while (i < MM_RADIUS)
+    {
+        if (inside_circle(cx, cy,
+            cx + lx * i,
+            cy + ly * i,
+            MM_RADIUS))
+            put_pixel(&m->img,
+                cx + lx * i,
+                cy + ly * i,
+                0xAD0900);
+
+        if (inside_circle(cx, cy,
+            cx + rx * i,
+            cy + ry * i,
+            MM_RADIUS))
+            put_pixel(&m->img,
+                cx + rx * i,
+                cy + ry * i,
+                0xAD0900);
+        i++;
+    }
+}
+
+void draw_minimap(t_maze *m)
+{
+        draw_circle_border(
+        &m->img,
+        MM_PADDING + MM_RADIUS,
+        MM_PADDING + MM_RADIUS,
+        MM_RADIUS + 10,
+        0x63120D
+    );
+    int cx = MM_PADDING + MM_RADIUS;
+    int cy = MM_PADDING + MM_RADIUS;
+
+    int x;
+    int y;
+
+    y = 0;
+    while (y < m->map.height)
     {
         x = 0;
-        while (x < maze->map.width)
+        while (x < m->map.width)
         {
-            if (maze->map.grid[y][x] == '1')
-                draw_square(&maze->img, x * t, y * t, t, 0x333333);
-            else
-                draw_square(&maze->img, x * t, y * t, t, 0x777777);
+            int draw_x = cx +
+                (x - m->map.player.pos.x) * MM_TILE;
+            int draw_y = cy +
+                (y - m->map.player.pos.y) * MM_TILE;
+
+            if (inside_circle(cx, cy, draw_x, draw_y, MM_RADIUS))
+            {
+                if (m->map.grid[y][x] == '1')
+                    draw_square_clipped(&m->img, draw_x, draw_y,
+                        MM_TILE, 0x222222, cx, cy, MM_RADIUS);
+                else
+                    draw_square_clipped(&m->img, draw_x, draw_y,
+                        MM_TILE, 0x888888, cx, cy, MM_RADIUS);
+            }
             x++;
         }
         y++;
     }
 
-    int px = maze->map.player.pos.x * t;
-    int py = maze->map.player.pos.y * t;
+    // PLAYER
+    draw_circle(&m->img, cx, cy, 4, 0xAD0900);
+    draw_fov(m, cx, cy);
 
-    put_pixel(&maze->img, px, py, 0xFF0000);
 }
 
 
-
-// void draw_direction(t_maze *maze)
-// {
-//     int tile = 12;
-
-//     int px = maze->map.player.pos_x * tile;
-//     int py = maze->map.player.pos_y * tile;
-
-//     int dx = px + maze->map.player.dir_x * (tile * 2);
-//     int dy = py + maze->map.player.dir_y * (tile * 2);
-
-//     for (int i = 0; i < tile * 2; i++)
-//     {
-//         int xx = px + (maze->map.player.dir_x * i);
-//         int yy = py + (maze->map.player.dir_y * i);
-//         put_pixel(&maze->img, xx, yy, 0xFFAA00);  // orange
-//     }
-// }
-
-// void draw_minimap(t_maze *maze)
-// {
-//     int tile = 32;
-
-//     for (int y = 0; y < maze->map.height; y++)
-//     {
-//         for (int x = 0; x < maze->map.width; x++)
-//         {
-//             if (maze->map.grid[y][x] == '1')
-//                 draw_square(&maze->img, x * tile, y * tile, tile, 0x333333);
-//             else
-//                 draw_square(&maze->img, x * tile, y * tile, tile, 0x777777);
-//         }
-//     }
-
-//     int px = maze->map.player.pos_x * tile;
-//     int py = maze->map.player.pos_y * tile;
-
-//     // put_pixel(&maze->img, px, py, 0xFF0000);
-//     draw_square(&maze->img, px - tile/4, py - tile/4, tile/2, 0xFF0000);
-//     draw_direction(maze);
-// }
-
-// void render_background(t_maze *maze, int color)
-// {
-//     int x, y;
-
-//     for (y = 0; y < maze->win_h; y++)
-//     {
-//         for (x = 0; x < maze->win_w; x++)
-//         {
-//             int pixel = y * maze->img.line_len + x * (maze->img.bpp / 8);
-//             *(unsigned int *)(maze->img.addr + pixel) = color;
-//         }
-//     }
-//     mlx_put_image_to_window(maze->mlx, maze->win, maze->img.img, 0, 0);
-// }
-
-// int render(t_maze *maze)
-// {
-//     render_background(maze, 0x202020);
-
-//     draw_minimap(maze);
-
-//     mlx_put_image_to_window(maze->mlx, maze->win, maze->img.img, 0, 0);
-
-//     return 0;
-// }

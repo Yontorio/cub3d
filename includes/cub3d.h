@@ -13,7 +13,19 @@
 # define INITIAL_CAPACITY 64
 
 # define MOVE_SPEED 0.08
-# define ROT_SPEED  0.04
+# define ROT_SPEED  0.05
+
+#define MM_RADIUS      75
+#define MM_TILE        8
+#define MM_PADDING     15
+#define FOV_ANGLE      0.66 // use it in initing too
+#define MM_BORDER_THICKNESS 4
+#define MM_BG_COLOR         0x111111
+#define MM_BORDER_COLOR     0x444444 // use it 
+
+#define MM_PLAYER_RADIUS 3 // use it 
+#define MM_PLAYER_COLOR  0xAD0900 // use it 
+
 
 # define KEY_ESC   53
 # define KEY_W     13
