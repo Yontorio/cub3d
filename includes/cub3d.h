@@ -14,7 +14,7 @@
 # define INITIAL_CAPACITY 64
 
 # define MOVE_SPEED 0.08
-# define ROT_SPEED  0.04
+# define ROT_SPEED  0.05
 
 # define KEY_ESC   65307
 # define KEY_W     119
@@ -23,6 +23,32 @@
 # define KEY_D     100
 # define KEY_LEFT  65361
 # define KEY_RIGHT 65363
+
+
+typedef struct s_mm
+{
+    // square top left
+    int	sx;
+	int	sy;
+	int	width;
+	int	height;
+
+    // circle centre
+	int	cx;
+	int	cy;
+	int	radius;
+}	t_mm;
+
+#define MM_RADIUS       75
+#define MM_TILE         8
+#define MM_PADDING      15
+#define FOV_ANGLE       0.66 // use it in initing too
+#define MM_BR_THICk     4
+#define MM_BR_COLOR     0x63120D
+#define MM_BG_COLOR     0x111111
+
+#define MM_PLAYER_RADIUS 4
+#define MM_PLAYER_COLOR  0xAD0900
 
 
 typedef struct s_keys
@@ -155,7 +181,7 @@ bool    maze_setup(void);
 bool    error_exit(char *error_msg);
 t_maze **maze_struct(void);
 int render_frame(t_maze *maze);
-void draw_minimap(t_maze *maze);
+void render_minimap(t_maze *maze);
 void raycasting(t_maze *m);
 void put_pixel(t_img *img, int x, int y, int color);
 
@@ -173,7 +199,7 @@ void parse_texture_line(char *line);
 void parse_color_line(char *line);
 int is_map_line(char *line);
 void parse_player(t_map *map);
-void normalize_map(t_map *map);
+// void normalize_map(t_map *map);
 void check_map_chars(t_map *map);
 void check_map_closed(t_map *map);
 
