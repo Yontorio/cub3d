@@ -8,8 +8,9 @@ bool init_maze(t_maze **pointer)
     maze = *pointer;
     maze->mlx = NULL;
     maze->win = NULL;
-    maze->win_w = 1280;
     maze->win_h = 720;
+    maze->win_w = 1280;
+    maze->mouse_x = 640;
     init_img(&maze->img);
     init_env(&maze->env);
     init_map(&maze->map);
