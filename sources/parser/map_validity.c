@@ -12,8 +12,10 @@ void check_map_chars(t_map *map)
         while (map->grid[y][x])
         {
             c = map->grid[y][x];
-            if (c != '0' && c != '1' && c != ' ' &&
-                c != 'N' && c != 'S' && c != 'E' && c != 'W')
+            if (c != '0' && c != '1' &&
+                c != 'D' && c != 'd' &&
+                c != 'N' && c != ' ' &&
+                c != 'S' && c != 'E' && c != 'W')
                 error_exit("Invalid character in map");
             x++;
         }

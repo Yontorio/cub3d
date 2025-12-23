@@ -46,6 +46,7 @@ void	init_dda(t_player *p, t_vec *ray, t_dda *d)
 	d->step_y = (ray->y < 0) ? -1 : 1;
 	d->side_y = (ray->y < 0) ? (p->pos.y - d->map_y) * d->delta_y
 		: (d->map_y + 1.0 - p->pos.y) * d->delta_y;
+	d->tile = '\0';
 }
 
 void	perform_dda(t_maze *m, t_dda *d)
@@ -64,8 +65,12 @@ void	perform_dda(t_maze *m, t_dda *d)
 			d->map_y += d->step_y;
 			d->side = 1;
 		}
-		if (m->map.grid[d->map_y][d->map_x] == '1')
+		if (m->map.grid[d->map_y][d->map_x] == '1'
+		|| m->map.grid[d->map_y][d->map_x] == 'D')
+		{
+			d->tile = m->map.grid[d->map_y][d->map_x];
 			break ;
+		}
 	}
 }
 
@@ -91,16 +96,25 @@ void	calc_line_height(t_maze *m, double dist, t_line *line)
 		line->end = m->win_h - 1;
 }
 
-int	get_tex_id(t_vec *ray, int side)
+int	get_tex_id(t_vec *ray, t_dda dda)
 {
-	if (side == 0 && ray->x > 0)
-		return (EAST);
-	else if (side == 0 && ray->x < 0)
-		return (WEST);
-	else if (side == 1 && ray->y > 0)
-		return (SOUTH);
-	else
-		return (NORTH);
+	if (dda.tile == 'D')
+	{
+		return (DOOR);
+	}
+	else if (dda.tile =='1')
+	{
+		if (dda.side == 0 && ray->x > 0)
+			return (EAST);
+		else if (dda.side == 0 && ray->x < 0)
+			return (WEST);
+		else if (dda.side == 1 && ray->y > 0)
+			return (SOUTH);
+		else
+			return (NORTH);		
+	}
+	return (0);
+
 }
 
 double	get_wall_x(t_player *p, t_vec *ray, int side, double dist)
@@ -151,7 +165,7 @@ void	raycasting(t_maze *m)
 		perform_dda(m, &dda);
 		line.dist = calc_distance(&m->map.player, &dda, &ray);
 		calc_line_height(m, line.dist, &line);
-		tex.id = get_tex_id(&ray, dda.side);
+		tex.id = get_tex_id(&ray, dda);
 		tex.img = &m->tex[tex.id];
 		tex.wall_x = get_wall_x(&m->map.player, &ray, dda.side, line.dist);
 		tex.x = (int)(tex.wall_x * tex.img->width);

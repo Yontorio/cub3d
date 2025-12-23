@@ -16,6 +16,7 @@
 # define ROT_SPEED  0.05
 
 # define KEY_ESC   53
+# define KEY_E     14 // macos
 # define KEY_W     13
 # define KEY_S     1
 # define KEY_A     0
@@ -72,6 +73,7 @@ typedef struct s_dda
 	int		step_x;
 	int		step_y;
 	int		side;
+    char    tile;
 }	t_dda;
 
 typedef struct s_line
@@ -120,7 +122,8 @@ typedef enum e_tex_id
     NORTH = 0,
     SOUTH,
     WEST,
-    EAST
+    EAST,
+    DOOR
 }   t_tex_id;
 
 typedef struct s_player
@@ -163,7 +166,7 @@ typedef struct s_maze
     t_env       env;
     t_map       map;
 
-    t_img       tex[4];
+    t_img       tex[5];
 
     t_keys      keys;
 }   t_maze;
@@ -192,7 +195,7 @@ void load_textures(t_maze *m);
 int render_maze(t_maze *maze);
 int key_press(int key, t_maze *maze);
 int key_release(int key, t_maze *maze);
-int     close_window(void);
+int close_window(void);
 int mouse_rotate(int x, int y, t_maze *maze);
 
 // void    render_background(t_maze *maze, int color);

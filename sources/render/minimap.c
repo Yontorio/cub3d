@@ -158,6 +158,10 @@ void	draw_rounded_map(t_maze *maze, t_mm mm)
 			{
 				if (maze->map.grid[y][x] == '1')
 					draw_square_clipped(&maze->img, mm, 0x222222);
+				else if (maze->map.grid[y][x] == 'D')
+					draw_square_clipped(&maze->img, mm, 0x6633000);
+				else if (maze->map.grid[y][x] == 'd')
+					draw_square_clipped(&maze->img, mm,  0x555555);
 				else
 					draw_square_clipped(&maze->img, mm, 0x888888);
 			}
