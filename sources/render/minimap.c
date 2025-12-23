@@ -69,7 +69,7 @@ static void	rotate(double *x, double *y, double angle)
 	*y = old_x * sin(angle) + *y * cos(angle);
 }
 
-void	draw_circle_border(t_img *img, t_mm mm)
+void	draw_backgroud_border(t_img *img, t_mm mm)
 {
 	int	x;
 	int	y;
@@ -158,6 +158,10 @@ void	draw_rounded_map(t_maze *maze, t_mm mm)
 			{
 				if (maze->map.grid[y][x] == '1')
 					draw_square_clipped(&maze->img, mm, 0x222222);
+				else if (maze->map.grid[y][x] == 'D')
+					draw_square_clipped(&maze->img, mm, 0x6633000);
+				else if (maze->map.grid[y][x] == 'd')
+					draw_square_clipped(&maze->img, mm,  0x555555);
 				else
 					draw_square_clipped(&maze->img, mm, 0x888888);
 			}
@@ -166,8 +170,6 @@ void	draw_rounded_map(t_maze *maze, t_mm mm)
 		y++;
 	}
 }
-
-
 
 static t_mm	set_minimap_struct(void)
 {
@@ -191,7 +193,7 @@ void render_minimap(t_maze *maze)
     img = &maze->img;
     player = &maze->map.player;
     minimap = set_minimap_struct();
-    draw_circle_border(img, minimap);
+    draw_backgroud_border(img, minimap);
     draw_rounded_map(maze, minimap);
     draw_player(img, minimap);
     draw_fov(player, img, minimap);

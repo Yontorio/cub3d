@@ -2,7 +2,8 @@
 
 static int is_wall(t_maze *m, double y, double x)
 {
-    return (m->map.grid[(int)y][(int)x] == '1');
+    return (m->map.grid[(int)y][(int)x] == '1'
+             || m->map.grid[(int)y][(int)x] == 'D');
 }
 
 void move_forward(t_maze *m, t_player *p)
@@ -69,6 +70,22 @@ void rotate(t_player *p, double angle)
     p->plane.y = old_plane_x * sin(angle) + p->plane.y * cos(angle);
 }
 
+static void	try_open_door(t_maze *m)
+{
+	t_player	*p;
+	int			tx;
+	int			ty;
+
+	p = &m->map.player;
+	tx = (int)(p->pos.x + p->dir.x);
+	ty = (int)(p->pos.y + p->dir.y);
+
+	if (m->map.grid[ty][tx] == 'D')
+		m->map.grid[ty][tx] = 'd';
+	else if (m->map.grid[ty][tx] == 'd')
+		m->map.grid[ty][tx] = 'D';
+}
+
 int key_press(int key, t_maze *maze)
 {
     if (key == KEY_ESC)
@@ -90,7 +107,9 @@ int key_press(int key, t_maze *maze)
 
 int key_release(int key, t_maze *maze)
 {
-    if (key == KEY_W)
+    if (key == KEY_E)
+	    try_open_door(maze);
+    else if (key == KEY_W)
         maze->keys.w = 0;
     else if (key == KEY_S)
         maze->keys.s = 0;

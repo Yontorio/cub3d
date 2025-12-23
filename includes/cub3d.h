@@ -17,6 +17,7 @@
 # define ROT_SPEED  0.05
 
 # define KEY_ESC   65307
+# define KEY_E     101
 # define KEY_W     119
 # define KEY_S     115
 # define KEY_A     97
@@ -39,9 +40,9 @@ typedef struct s_mm
 	int	radius;
 }	t_mm;
 
-#define MM_RADIUS       75
-#define MM_TILE         8
-#define MM_PADDING      15
+#define MM_RADIUS       90
+#define MM_TILE         9
+#define MM_PADDING      18
 #define FOV_ANGLE       0.66 // use it in initing too
 #define MM_BR_THICk     4
 #define MM_BR_COLOR     0x63120D
@@ -74,6 +75,7 @@ typedef struct s_dda
 	int		step_x;
 	int		step_y;
 	int		side;
+    char    tile;
 }	t_dda;
 
 typedef struct s_line
@@ -122,7 +124,8 @@ typedef enum e_tex_id
     NORTH = 0,
     SOUTH,
     WEST,
-    EAST
+    EAST,
+    DOOR
 }   t_tex_id;
 
 typedef struct s_player
@@ -165,7 +168,7 @@ typedef struct s_maze
     t_env       env;
     t_map       map;
 
-    t_img       tex[4];
+    t_img       tex[5];
 
     t_keys      keys;
 }   t_maze;
