@@ -7,7 +7,7 @@ static int	safe_read(int fd, char *buffer, int size)
 	i = read(fd, buffer, size);
 	if (i < 0)
 	{
-		error_exit("Error\nRead failure");
+		error_exit("Read failure");
 	}
 	return (i);
 }
@@ -41,7 +41,7 @@ char	*read_file(char *file_path)
 	i = safe_read(fd, buffer, 50); 
 	if (!i)
     {
-        error_exit("Error\nConfig file is empty");
+        error_exit("Config file is empty");
     }
 	buffer[i] = '\0';
 	return (read_loop(fd, ft_strdup(buffer)));

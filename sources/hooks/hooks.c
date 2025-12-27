@@ -70,22 +70,49 @@ void rotate(t_player *p, double angle)
     p->plane.y = old_plane_x * sin(angle) + p->plane.y * cos(angle);
 }
 
-static void	try_open_door(t_maze *m)
+// static int	player_too_close(t_player *p, int tx, int ty)
+// {
+// 	double dx = p->pos.x - (tx + 0.5);
+// 	double dy = p->pos.y - (ty + 0.5);
+
+// 	return ((dx * dx + dy * dy) < 0.3);
+// }
+static int	player_in_tile(t_player p, int tx, int ty)
 {
-	t_player	*p;
-	int			tx;
-	int			ty;
+	int px = (int)p.pos.x;
+	int py = (int)p.pos.y;
 
-	p = &m->map.player;
-	tx = (int)(p->pos.x + p->dir.x);
-	ty = (int)(p->pos.y + p->dir.y);
-
-	if (m->map.grid[ty][tx] == 'D')
-		m->map.grid[ty][tx] = 'd';
-	else if (m->map.grid[ty][tx] == 'd')
-		m->map.grid[ty][tx] = 'D';
+	return (px == tx && py == ty);
 }
 
+static void try_open_door(t_maze *m)
+{
+	t_player	p;
+	int			tx;
+	int			ty;
+    int         tiles_away;
+
+    tiles_away = 0;
+	p = m->map.player;
+    while ((++tiles_away) <= 2)
+    {
+        tx = (int)(p.pos.x + p.dir.x * tiles_away);
+        ty = (int)(p.pos.y + p.dir.y * tiles_away);
+        if (m->map.grid[ty][tx] == 'D')
+        {
+            m->map.grid[ty][tx] = 'd';
+            return ;
+        }
+        else if (m->map.grid[ty][tx] == 'd')
+        {
+            if (!player_in_tile(p, tx, ty))
+                m->map.grid[ty][tx] = 'D';
+            return ;
+        }
+        else if (m->map.grid[ty][tx] == '1')
+            return;
+    }
+}
 int key_press(int key, t_maze *maze)
 {
     if (key == KEY_ESC)

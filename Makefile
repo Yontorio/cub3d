@@ -49,17 +49,15 @@ ALLOC_SRC = \
 
 UTILS_SRC = \
     utils/read_file.c \
-    utils/join_list.c \
     utils/count_char.c \
-    utils/creat_node.c \
-    utils/lst_to_arr.c \
     utils/skip_spaces.c \
     utils/split_lines.c \
-    utils/list_add_back.c \
+    utils/split_one_time.c \
     utils/check_if_match.c \
-    utils/join_two_strings.c \
+    utils/join_two_strings.c
 
 
+# remove none used functions
 STDFCTS_SRC = \
     stdfcts/ft_min.c \
     stdfcts/ft_abs.c \
