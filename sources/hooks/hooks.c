@@ -85,33 +85,25 @@ static int	player_in_tile(t_player p, int tx, int ty)
 	return (px == tx && py == ty);
 }
 
-static void try_open_door(t_maze *m)
+static void	try_open_door(t_maze *m)
 {
 	t_player	p;
 	int			tx;
 	int			ty;
-    int         tiles_away;
 
-    tiles_away = 0;
 	p = m->map.player;
-    while ((++tiles_away) <= 2)
-    {
-        tx = (int)(p.pos.x + p.dir.x * tiles_away);
-        ty = (int)(p.pos.y + p.dir.y * tiles_away);
-        if (m->map.grid[ty][tx] == 'D')
-        {
-            m->map.grid[ty][tx] = 'd';
-            return ;
-        }
-        else if (m->map.grid[ty][tx] == 'd')
-        {
-            if (!player_in_tile(p, tx, ty))
-                m->map.grid[ty][tx] = 'D';
-            return ;
-        }
-        else if (m->map.grid[ty][tx] == '1')
-            return;
-    }
+	tx = (int)(p.pos.x + p.dir.x);
+	ty = (int)(p.pos.y + p.dir.y);
+
+	if (m->map.grid[ty][tx] == 'D')
+	{
+		m->map.grid[ty][tx] = 'd';
+	}
+	else if (m->map.grid[ty][tx] == 'd')
+	{
+		if (!player_in_tile(p, tx, ty))
+			m->map.grid[ty][tx] = 'D';
+	}
 }
 int key_press(int key, t_maze *maze)
 {

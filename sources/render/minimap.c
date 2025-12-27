@@ -291,5 +291,3 @@ void render_minimap(t_maze *maze)
     draw_fov(player, img, minimap);
     draw_border(img, minimap);
 }
-
-
