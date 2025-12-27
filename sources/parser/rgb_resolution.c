@@ -24,23 +24,46 @@ static void set_color(char type, int r, int g, int b)
         env->ceiling = assemble_rgb(r, g, b);
 }
 
+static bool color_check(const char *str)
+{
+    while (*str)
+    {
+        if (ft_isdigit(*str) || *str == ',' || *str == ' ')
+        {
+            str++;
+            continue;
+        }
+        return (true);
+    }
+    return (false);
+}
+
+static bool rgb_validity(char **parts, char **rgb)
+{
+    
+    if (count_char(parts[1], ',') != 2)
+        return(true);
+    if (color_check(parts[1]))
+        return(true);
+    if (!rgb || !rgb[0] || !rgb[1] || !rgb[2])
+        return(true);
+    return(false);
+}
+
 void parse_color_line(char *line)
 {
     char    **parts;
     char    **rgb;
     int      r, g, b;
 
-    parts = ft_split(line, " ");
+    parts = split_one_time(line);
     if (!parts || !parts[0] || !parts[1])
         error_exit("Invalid color line");
-
     rgb = ft_split(parts[1], ",");
-    if (!rgb || !rgb[0] || !rgb[1] || !rgb[2] || count_char(parts[1], ',') != 2)
+    if (rgb_validity(parts, rgb))
         error_exit("Invalid RGB format");
-
     r = ft_atoi(rgb[0]);
     g = ft_atoi(rgb[1]);
     b = ft_atoi(rgb[2]);
-
     set_color(parts[0][0], r, g, b);
 }

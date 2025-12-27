@@ -27,7 +27,7 @@ void parse_texture_line(char *line)
 {
     char    **parts;
 
-    parts = ft_split(line, " ");
+    parts = split_one_time(line);
     if (!parts || !parts[0] || !parts[1])
         error_exit("Invalid texture line");
 

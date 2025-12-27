@@ -16,6 +16,7 @@ static int	inside_circle(t_mm mm, int x, int y)
 	int	dx;
 	int	dy;
 
+	mm.radius += 10;
 	dx = x - mm.cx;
 	dy = y - mm.cy;
 	return (dx * dx + dy * dy <= mm.radius * mm.radius);
@@ -68,34 +69,122 @@ static void	rotate(double *x, double *y, double angle)
 	*x = old_x * cos(angle) - *y * sin(angle);
 	*y = old_x * sin(angle) + *y * cos(angle);
 }
+static inline int	get_pixel(t_img *img, int x, int y)
+{
+	char	*pixel;
 
-void	draw_backgroud_border(t_img *img, t_mm mm)
+	if (x < 0 || y < 0 || x >= img->width || y >= img->height)
+		return (0);
+	pixel = img->addr + (y * img->line_len + x * (img->bpp / 8));
+	return (*(int *)pixel);
+}
+static inline int	soft_blur(int color)
+{
+	int r = (color >> 16) & 0xFF;
+	int g = (color >> 8) & 0xFF;
+	int b = color & 0xFF;
+
+	// soften + darken
+	r = (r + 40) / 3;
+	g = (g + 40) / 3;
+	b = (b + 40) / 3;
+
+	return ((r << 16) | (g << 8) | b);
+}
+
+void	draw_backgroud(t_img *img, t_mm mm)
 {
 	int	x;
 	int	y;
 	int	dist_sq;
 	int	inner_sq;
+	int	color;
 
-	y = -(mm.radius += 10);
-    inner_sq = ((mm.radius - MM_BR_THICk) * (mm.radius - MM_BR_THICk));
+	// mm.radius += 10;
+	inner_sq = (mm.radius - MM_BR_THICk) * (mm.radius - MM_BR_THICk);
+
+	y = -mm.radius;
 	while (y <= mm.radius)
 	{
 		x = -mm.radius;
 		while (x <= mm.radius)
 		{
 			dist_sq = x * x + y * y;
-			if (dist_sq <= (mm.radius * mm.radius))
+			if (dist_sq <= mm.radius * mm.radius)
 			{
-				if (dist_sq >= inner_sq)
-					put_pixel(img, mm.cx + x, mm.cy + y, MM_BR_COLOR);
-				else
-					put_pixel(img, mm.cx + x, mm.cy + y, MM_BG_COLOR);
+				if (!(dist_sq >= inner_sq))
+				{
+					color = get_pixel(img, mm.cx + x, mm.cy + y);
+					put_pixel(img, mm.cx + x, mm.cy + y, soft_blur(color));
+				}
 			}
 			x++;
 		}
 		y++;
 	}
 }
+void	draw_border(t_img *img, t_mm mm)
+{
+	int	x;
+	int	y;
+	int	dist_sq;
+	int	inner_sq;
+	int	color;
+ int num = (mm.radius - MM_BR_THICk) * (mm.radius - MM_BR_THICk);
+	mm.radius += 10;
+	inner_sq = (mm.radius - MM_BR_THICk) * (mm.radius - MM_BR_THICk);
+
+	y = -mm.radius;
+	while (y <= mm.radius)
+	{
+		x = -mm.radius;
+		while (x <= mm.radius)
+		{
+			dist_sq = x * x + y * y;
+			if (dist_sq <= mm.radius * mm.radius)
+			{
+				if (dist_sq >= inner_sq)
+				{
+					put_pixel(img, mm.cx + x, mm.cy + y, MM_BR_COLOR);
+				}
+				else if (dist_sq >= num)
+				{
+					put_pixel(img, mm.cx + x, mm.cy + y, MM_BG_COLOR);
+				}
+			}
+			x++;
+		}
+		y++;
+	}
+}
+
+// void	draw_backgroud_and_border(t_img *img, t_mm mm)
+// {
+// 	int	x;
+// 	int	y;
+// 	int	dist_sq;
+// 	int	inner_sq;
+
+// 	y = -(mm.radius += 10);
+//     inner_sq = ((mm.radius - MM_BR_THICk) * (mm.radius - MM_BR_THICk));
+// 	while (y <= mm.radius)
+// 	{
+// 		x = -mm.radius;
+// 		while (x <= mm.radius)
+// 		{
+// 			dist_sq = x * x + y * y;
+// 			if (dist_sq <= (mm.radius * mm.radius))
+// 			{
+// 				if (dist_sq >= inner_sq)
+// 					put_pixel(img, mm.cx + x, mm.cy + y, MM_BR_COLOR);
+// 				else
+// 					put_pixel(img, mm.cx + x, mm.cy + y, MM_BG_COLOR);
+// 			}
+// 			x++;
+// 		}
+// 		y++;
+// 	}
+// }
 
 static void	draw_square_clipped(t_img *img, t_mm mm, int color)
 {
@@ -157,13 +246,14 @@ void	draw_rounded_map(t_maze *maze, t_mm mm)
 			if (inside_circle(mm, mm.sx, mm.sy))
 			{
 				if (maze->map.grid[y][x] == '1')
-					draw_square_clipped(&maze->img, mm, 0x222222);
+					draw_square_clipped(&maze->img, mm, 0x111111);
+				else if (maze->map.grid[y][x] == '0')
+					draw_square_clipped(&maze->img, mm, 0x888888);
 				else if (maze->map.grid[y][x] == 'D')
-					draw_square_clipped(&maze->img, mm, 0x6633000);
+					draw_square_clipped(&maze->img, mm, 0x613900);
 				else if (maze->map.grid[y][x] == 'd')
 					draw_square_clipped(&maze->img, mm,  0x555555);
-				else
-					draw_square_clipped(&maze->img, mm, 0x888888);
+
 			}
 			x++;
 		}
@@ -195,10 +285,11 @@ void render_minimap(t_maze *maze)
     img = &maze->img;
     player = &maze->map.player;
     minimap = set_minimap_struct();
-    draw_backgroud_border(img, minimap);
+    draw_backgroud(img, minimap);
     draw_rounded_map(maze, minimap);
     draw_player(img, minimap);
     draw_fov(player, img, minimap);
+    draw_border(img, minimap);
 }
 
 

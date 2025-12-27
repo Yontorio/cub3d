@@ -7,7 +7,7 @@ int	safe_open(const char *path, int flags)
 	fd = open(path, flags);
 	if (fd == -1)
     {
-		error_exit("Error\nFile can not be opened");
+		error_exit("File can not be opened");
     }
 	fd_storage(fd);
 	return (fd);

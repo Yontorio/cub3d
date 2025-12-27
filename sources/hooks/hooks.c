@@ -69,22 +69,75 @@ void rotate(t_player *p, double angle)
     p->plane.x = p->plane.x * cos(angle) - p->plane.y * sin(angle);
     p->plane.y = old_plane_x * sin(angle) + p->plane.y * cos(angle);
 }
+// static int	player_too_close(t_player *p, int tx, int ty)
+// {
+// 	double dx = p->pos.x - (tx + 0.5);
+// 	double dy = p->pos.y - (ty + 0.5);
 
-static void	try_open_door(t_maze *m)
+// 	return ((dx * dx + dy * dy) < 0.3);
+// }
+static int	player_in_tile(t_player p, int tx, int ty)
 {
-	t_player	*p;
+	int px = (int)p.pos.x;
+	int py = (int)p.pos.y;
+
+	return (px == tx && py == ty);
+}
+
+// static void	try_open_door(t_maze *m)
+// {
+// 	t_player	*p;
+// 	int			tx;
+// 	int			ty;
+
+// 	p = &m->map.player;
+// 	tx = (int)(p->pos.x + p->dir.x);
+// 	ty = (int)(p->pos.y + p->dir.y);
+
+// 	if (m->map.grid[ty][tx] == 'D')
+// 	{
+// 		m->map.grid[ty][tx] = 'd';
+// 	}
+// 	else if (m->map.grid[(int)(p->pos.y + p->dir.y*2)][(int)(p->pos.x + p->dir.x*2)] == 'D')
+// 	{
+// 		m->map.grid[(int)(p->pos.y + p->dir.y*2)][(int)(p->pos.x + p->dir.x*2)] = 'd';
+// 	}
+// 	else if (m->map.grid[ty][tx] == 'd')
+// 	{
+// 		if (!player_in_tile(p, tx, ty))
+// 			m->map.grid[ty][tx] = 'D';
+// 	}
+// }
+static void try_open_door(t_maze *m)
+{
+	t_player	p;
 	int			tx;
 	int			ty;
+    int         tiles_away;
 
-	p = &m->map.player;
-	tx = (int)(p->pos.x + p->dir.x);
-	ty = (int)(p->pos.y + p->dir.y);
-
-	if (m->map.grid[ty][tx] == 'D')
-		m->map.grid[ty][tx] = 'd';
-	else if (m->map.grid[ty][tx] == 'd')
-		m->map.grid[ty][tx] = 'D';
+    tiles_away = 0;
+	p = m->map.player;
+    while ((++tiles_away) <= 2)
+    {
+        tx = (int)(p.pos.x + p.dir.x * tiles_away);
+        ty = (int)(p.pos.y + p.dir.y * tiles_away);
+        if (m->map.grid[ty][tx] == 'D')
+        {
+            m->map.grid[ty][tx] = 'd';
+            return ;
+        }
+        else if (m->map.grid[ty][tx] == 'd')
+        {
+            if (!player_in_tile(p, tx, ty))
+                m->map.grid[ty][tx] = 'D';
+            return ;
+        }
+        else if (m->map.grid[ty][tx] == '1')
+            return;
+    }
 }
+
+
 
 int key_press(int key, t_maze *maze)
 {
