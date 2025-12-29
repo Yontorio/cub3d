@@ -46,7 +46,7 @@ typedef struct s_mm
 #define FOV_ANGLE       0.66 // use it in initing too
 #define MM_BR_THICk     4
 #define MM_BR_COLOR     0x63120D
-#define MM_BG_COLOR     0x111111
+#define MM_BG_COLOR     0x000000
 #define MM_TEXT_COLOR   0xFFFFFF
 
 #define MM_PLAYER_RADIUS 4
@@ -205,7 +205,7 @@ int mouse_rotate(int x, int y, t_maze *maze);
 
 void parse_texture_line(char *line);
 void parse_color_line(char *line);
-int is_map_line(char *line);
+bool is_map_line(char c);
 void parse_player(t_map *map);
 // void normalize_map(t_map *map);
 void check_map_chars(t_map *map);

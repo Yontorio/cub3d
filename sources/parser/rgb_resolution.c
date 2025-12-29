@@ -24,29 +24,36 @@ static void set_color(char type, int r, int g, int b)
         env->ceiling = assemble_rgb(r, g, b);
 }
 
-static bool color_check(const char *str)
+static bool color_check(char *str)
 {
-    while (*str)
-    {
-        if (ft_isdigit(*str) || *str == ',' || *str == ' ')
-        {
-            str++;
-            continue;
-        }
+    int i;
+
+    i = skip_spaces(str, 0);
+    if (!str[i])
         return (true);
-    }
-    return (false);
+    while (str[i] && ft_isdigit(str[i]))
+        i++;
+    i += skip_spaces(str, i);
+    if (!str[i])
+        return (false);
+    return (true);
 }
 
 static bool rgb_validity(char **parts, char **rgb)
 {
-    
+    int i;
+
     if (count_char(parts[1], ',') != 2)
-        return(true);
-    if (color_check(parts[1]))
         return(true);
     if (!rgb || !rgb[0] || !rgb[1] || !rgb[2])
         return(true);
+    i = 0;
+    while (rgb[i])
+    {
+        if (color_check(rgb[i]))
+            return(true);
+        i++;
+    }
     return(false);
 }
 

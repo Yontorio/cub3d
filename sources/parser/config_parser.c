@@ -29,7 +29,7 @@ static void	process_line_content(char **lines, int i, t_cnt *cnt)
 		parse_color_line(lines[i]);
 		cnt->colors++;
 	}
-	else if (is_map_line(lines[i]))
+	else if (is_map_line(lines[i][0]))
 	{
 		extract_map(&lines[i]);
 		cnt->map++;
