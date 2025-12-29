@@ -3,19 +3,15 @@
 void check_map_chars(t_map *map)
 {
     int x;
-    int y = 0;
-    char c;
+    int y;
 
+    y = 0;
     while (map->grid[y])
     {
         x = 0;
         while (map->grid[y][x])
         {
-            c = map->grid[y][x];
-            if (c != '0' && c != '1' &&
-                c != 'D' && c != 'd' &&
-                c != 'N' && c != ' ' &&
-                c != 'S' && c != 'E' && c != 'W')
+            if (!is_map_line(map->grid[y][x]))
                 error_exit("Invalid character in map");
             x++;
         }

@@ -21,12 +21,21 @@ int get_max_width(char **map)
     return max;
 }
 
-int is_map_line(char *line)
-{
-    int i;
+// int is_map_line(char *line)
+// {
+//     int i;
 
-    i = skip_spaces(line, 0);
-    return (line[i] == '1' || line[i] == '0');
+//     i = skip_spaces(line, 0);
+//     return (line[i] == '1' || line[i] == '0' || line[i] == '0');
+// }
+
+bool is_map_line(char c)
+{
+    return (c == ' ' ||
+            c == '0' || c == '1' ||
+            c == 'D' || c == 'd' ||
+            c == 'N' || c == 'S' ||
+            c == 'E' || c == 'W' );
 }
 
 void normalize_map(t_map *map)
@@ -62,7 +71,11 @@ void extract_map(char **lines)
     map_lines = count_lines(lines);
     grid = allocate_memory(sizeof(char *) * (map_lines + 1));
     while ((++i) < map_lines)
+    {
+        if (!lines[i][0])
+            error_exit("Invalid line in map");
         grid[i] = ft_strdup(lines[i]);
+    }
     grid[map_lines] = NULL;
     map->grid = grid;
     map->height = map_lines;
